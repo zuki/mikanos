@@ -34,7 +34,7 @@ EFI_STATUS GetMemoryMap(struct MemoryMap *map) {
 }
 // #@@range_end(get_memory_map)
 
-// #@@range_start(get_memory_type)
+// #@@range_begin(get_memory_type)
 const CHAR16 *GetMemoryTypeUnicode(EFI_MEMORY_TYPE type) {
     switch (type) {
         case EfiReservedMemoryType: return L"EfiReservedmemoryType";
@@ -58,7 +58,7 @@ const CHAR16 *GetMemoryTypeUnicode(EFI_MEMORY_TYPE type) {
 }
 // #@@range_end(get_memory_type)
 
-// #@@range_start(save_memory_map)
+// #@@range_begin(save_memory_map)
 EFI_STATUS SaveMemoryMap(struct MemoryMap *map, EFI_FILE_PROTOCOL *file) {
     CHAR8 buf[256];
     UINTN len;
