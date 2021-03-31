@@ -38,7 +38,9 @@ int printk(const char *format, ...) {
     return result;
 }
 
-extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config)
+//extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config)
+//extern "C" void KernelMain(int a, int b, int c)
+extern "C" void KernelMain(uint64_t* dummy1, const FrameBufferConfig &dummy2, const FrameBufferConfig &frame_buffer_config)
 {
     switch (frame_buffer_config.pixel_format) {
         case kPixelRGBResv8BitPerColor:

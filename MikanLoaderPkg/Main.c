@@ -354,9 +354,13 @@ EFI_STATUS EFIAPI UefiMain(
             Halt();
     }
 
-    typedef void EntryPointType(const struct FrameBufferConfig *);
+    //typedef void EntryPointType(const struct FrameBufferConfig *);
+    typedef void EntryPointType(UINT64, const struct FrameBufferConfig *, const struct FrameBufferConfig *);
+    //typedef void EntryPointType(int a, int b, int c);
     EntryPointType *entry_point = (EntryPointType *)entry_addr;
-    entry_point(&config);
+    //entry_point(&config);
+    entry_point(1, &config, &config);
+    //entry_point(1, 2, 3);
 
     Print(L"All Done\n");
 
