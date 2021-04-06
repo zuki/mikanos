@@ -23,14 +23,13 @@
 #include "usb/classdriver/mouse.hpp"
 #include "usb/xhci/xhci.hpp"
 #include "usb/xhci/trb.hpp"
-
-void operator delete(void *obj) noexcept {
-}
+#include "interrupt.hpp"
+#include "asmfunc.h"
 
 const PixelColor kDesktopBGColor{ 45, 118, 237};
 const PixelColor kDesktopFGColor{255, 255, 255};
 
-char pixel_writer_buffer[sizeof(RGBResv8BitPerColorPixelWriter)];
+char pixel_writer_buf[sizeof(RGBResv8BitPerColorPixelWriter)];
 PixelWriter *pixel_writer;
 
 char console_buf[sizeof(Console)];
@@ -62,7 +61,7 @@ void SwitchEhci2Xhci(const pci::Device &xhc_dev)
     bool intel_ehc_exist = false;
     for (int i = 0; i < pci::num_device; ++i) {
         if (pci::devices[i].class_code.Match(0x0cu, 0x03u, 0x20u)   /* EHC */ &&
-            0x886 == pci::ReadVendorId(pci::devices[i])) {
+            0x8086 == pci::ReadVendorId(pci::devices[i])) {
             intel_ehc_exist = true;
             break;
         }
@@ -73,21 +72,35 @@ void SwitchEhci2Xhci(const pci::Device &xhc_dev)
 
     uint32_t superspeed_ports = pci::ReadConfReg(xhc_dev, 0xdc);    // USB3PRM
     pci::WriteConfReg(xhc_dev, 0xd8, superspeed_ports);             // USB3_PSSEN
-    uint32_t ehci2xhci_ports = pci::ReadConfReg(xhc_dev, 0xd4);     // USB3PRM
+    uint32_t ehci2xhci_ports = pci::ReadConfReg(xhc_dev, 0xd4);     // USB2PRM
     pci::WriteConfReg(xhc_dev, 0xd0, ehci2xhci_ports);              // XUSB2PR
     Log(kDebug, "SwitchEhci2Xhci: SS = %02x, xHCI = %02x\n",
         superspeed_ports, ehci2xhci_ports);
+}
+
+usb::xhci::Controller *xhc;
+
+__attribute__((interrupt))
+void IntHandlerXHCI(InterruptFrame *frame)
+{
+    while (xhc->PrimaryEventRing()->HasFront()) {
+        if (auto err = ProcessEvent(*xhc)) {
+            Log(kError, "Error while ProcessEvent: %s at %s:%d\n",
+                err.Name(), err.File(), err.Line());
+        }
+    }
+    NotifyEndOfInterrupt();
 }
 
 extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config)
 {
     switch (frame_buffer_config.pixel_format) {
         case kPixelRGBResv8BitPerColor:
-            pixel_writer = new(pixel_writer_buffer)
+            pixel_writer = new(pixel_writer_buf)
                 RGBResv8BitPerColorPixelWriter{frame_buffer_config};
             break;
         case kPixelBGRResv8BitPerColor:
-            pixel_writer = new(pixel_writer_buffer)
+            pixel_writer = new(pixel_writer_buf)
                 BGRResv8BitPerColorPixelWriter{frame_buffer_config};
             break;
     }
@@ -151,6 +164,18 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config)
             xhc_dev->bus, xhc_dev->device, xhc_dev->function);
     }
 
+    const uint16_t cs = GetCS();
+    SetIDTEntry(idt[InterruptVector::kXHCI], MakeIDTAttr(DescriptorType::kInterruptGate, 0),
+                reinterpret_cast<uint64_t>(IntHandlerXHCI), cs);
+    LoadIDT(sizeof(idt) - 1, reinterpret_cast<uintptr_t>(&idt[0]));
+
+    const uint8_t bsp_local_apic_id =
+        *reinterpret_cast<const uint32_t *>(0xfee00020) >> 24;
+    pci::ConfigureMSIFixedDestination(
+        *xhc_dev, bsp_local_apic_id,
+        pci::MSITriggerMode::kLevel, pci::MSIDeliveryMode::kFixed,
+        InterruptVector::kXHCI, 0);
+
     const WithError<uint64_t> xhc_bar = pci::ReadBar(*xhc_dev, 0);
     Log(kDebug, "ReadBar: %s\n", xhc_bar.error.Name());
     const uint64_t xhc_mmio_base = xhc_bar.value & ~static_cast<uint64_t>(0xf);
@@ -169,6 +194,9 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config)
     Log(kInfo, "xHC starting\n");
     xhc.Run();
 
+    ::xhc = &xhc;
+    __asm__("sti");
+
     usb::HIDMouseDriver::default_observer = MouseObserver;
 
     for (int i = 1; i <= xhc.MaxPorts(); ++i) {
@@ -181,13 +209,6 @@ extern "C" void KernelMain(const FrameBufferConfig& frame_buffer_config)
                     err.Name(), err.File(), err.Line());
                 continue;
             }
-        }
-    }
-
-    while (1) {
-        if (auto err = ProcessEvent(xhc)) {
-            Log(kError, "Error whiile ProcessEvent: %s at %s:%d\n",
-                err.Name(), err.File(), err.Line());
         }
     }
 
