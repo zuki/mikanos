@@ -308,6 +308,7 @@ EFI_STATUS EFIAPI UefiMain(
     status = gBS->FreePool(kernel_buffer);
     if (EFI_ERROR(status)) {
         Print(L"failed to free pool: %r\n", status);
+        Halt();
     }
 
     status = gBS->ExitBootServices(image_handle, memmap.map_key);

@@ -26,7 +26,7 @@ typedef struct {
     Elf64_Half      e_phnum;
     Elf64_Half      e_shentsize;
     Elf64_Half      e_shnum;
-    Elf64_Half      e_sstrndx;
+    Elf64_Half      e_shstrndx;
 } Elf64_Ehdr;
 
 typedef struct {
@@ -55,7 +55,7 @@ typedef struct {
         Elf64_Xword d_val;
         Elf64_Addr  d_ptr;
     } d_un;
-} ELf64_dyn;
+} Elf64_Dyn;
 
 #define DT_NULL     0
 #define DT_RELA     7

@@ -28,4 +28,4 @@ void SetLogLevel(LogLevel level);
  * @param level ログの優先度    しきい値以上の優先度のログのみが記録される。
  * @param format    書式文字列  printkと互換。
  */
-int Log(LogLevel levek, const char *format, ...);
+int Log(LogLevel level, const char *format, ...);
