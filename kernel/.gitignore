@@ -3,3 +3,4 @@ kernel.elf
 hankaku.bin
 .*.d
 *.swp
+test.run
