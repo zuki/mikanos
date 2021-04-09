@@ -1,6 +1,9 @@
 *.o
-kernel.elf
-hankaku.bin
+/kernel.elf
+/hankaku.bin
 .*.d
 *.swp
 test.run
+
+/html
+/ipxe_root

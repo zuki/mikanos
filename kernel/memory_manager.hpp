@@ -77,7 +77,7 @@ public:
      * @param range_begin メモリ範囲の始点
      * @param range_end   メモリ範囲の終点（最終フレームの次のフレーム）
      */
-    void SetMemoryRange(FrameID range_bebin, FrameID range_end);
+    void SetMemoryRange(FrameID range_begin, FrameID range_end);
 
 private:
     std::array<MapLineType, kFrameCount / kBitsPerMapLine> alloc_map_;
@@ -89,3 +89,5 @@ private:
     bool GetBit(FrameID frame) const;
     void SetBit(FrameID frame, bool allocated);
 };
+
+Error InitializeHeap(BitmapMemoryManager &memory_manager);
