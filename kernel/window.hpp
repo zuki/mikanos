@@ -9,6 +9,7 @@
 #include <vector>
 #include <optional>
 #include "graphics.hpp"
+#include "frame_buffer.hpp"
 
 /** @brief Windowクラスはグラフィックの表示領域を表す。
  *
@@ -23,9 +24,9 @@ public:
     public:
         WindowWriter(Window &window) : window_{window} {}
         /** @brief 指定された位置に指定された色を描く */
-        virtual void Write(int x, int y, const PixelColor &c) override
+        virtual void Write(Vector2D<int> pos, const PixelColor &c) override
         {
-            window_.At(x, y) = c;
+            window_.Write(pos, c);
         }
         /** @brief Widthは関連付けられたWindowの横幅をピクセル単位で返す。 */
         virtual int Width() const override { return window_.Width(); }
@@ -36,26 +37,26 @@ public:
     };
 
     /** @brief 指定されたピクセル数のエイメン描画領域を作成する。 */
-    Window(int width, int height);
+    Window(int width, int height, PixelFormat shadow_format);
     ~Window() = default;
     Window(const Window &rhs) = delete;
     Window &operator=(const Window &rhs) = delete;
 
-    /** @brief 与えられたPixelWriterにこのウィンドウの表示領域を描画する。
+    /** @brief 与えられたFrameBufferにこのウィンドウの表示領域を描画する。
      *
-     * @param writer 描画先
+     * @param dst 描画先
      * @param position writerの左上を基準とした描画位置
      */
-    void DrawTo(PixelWriter &writer, Vector2D<int> position);
+    void DrawTo(FrameBuffer &dst, Vector2D<int> position);
     /** @brief 透過色を設定する。 */
     void SetTransparentColor(std::optional<PixelColor> c);
     /** @brief このインスタンスに紐付いたWindowWriterを取得する。 */
     WindowWriter *Writer();
 
     /** @brief 指定した位置のピクセルを返す。 */
-    PixelColor &At(int x, int y);
-    /** @brief 指定した位置のピクセルを返す。 */
-    const PixelColor &At(int x, int y) const;
+    const PixelColor &At(Vector2D<int> pos) const;
+    /** @brief 指定した位置にピクセルを書き込む。 */
+    void Write(Vector2D<int> pos, PixelColor c);
 
     /** @brief 平面描画領域の横幅をピクセル単位で返す。 */
     int Width() const;
@@ -67,4 +68,6 @@ private:
     std::vector<std::vector<PixelColor>> data_{};
     WindowWriter writer_{*this};
     std::optional<PixelColor> transparent_color_{std::nullopt};
+
+    FrameBuffer shadow_buffer_{};
 };
