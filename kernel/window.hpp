@@ -63,6 +63,13 @@ public:
     /** @brief 平面描画領域の高さをピクセル単位で返す。 */
     int Height() const;
 
+    /** @brief このウィンドウの平面描画領域内で、矩形領域を移動する。
+     *
+     * @param src       移動元矩形
+     * @param dst_pos   移動先の原点
+     */
+    void Move(Vector2D<int> dst_pos, const Rectangle<int> &src);
+
 private:
     int width_, height_;
     std::vector<std::vector<PixelColor>> data_{};
