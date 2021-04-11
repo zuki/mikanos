@@ -36,7 +36,7 @@ public:
         Window &window_;
     };
 
-    /** @brief 指定されたピクセル数のエイメン描画領域を作成する。 */
+    /** @brief 指定されたピクセル数の平面描画領域を作成する。 */
     Window(int width, int height, PixelFormat shadow_format);
     ~Window() = default;
     Window(const Window &rhs) = delete;

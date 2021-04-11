@@ -32,7 +32,7 @@ kernel.elf: $(OBJS) Makefile
 .%.d: %.cpp
 	clang++ $(CPPFLAGS) $(CXXFLAGS) -MM $< > $@
 	$(eval OBJ = $(<:.cpp=.o))
-	sed -i 's|$(notdir $(OBJ))|$(OBJ)|' $@
+	sed -i '' 's|$(notdir $(OBJ))|$(OBJ)|' $@
 
 %.o: %.c Makefile
 	clang $(CPPFLAGS) $(CFLAGS) -c $< -o $@
@@ -40,7 +40,7 @@ kernel.elf: $(OBJS) Makefile
 .%.d: %.c
 	clang $(CPPFLAGS) $(CFLAGS) -MM $< > $@
 	$(eval OBJ = $(<:.c=.o))
-	sed -i 's|#(notdir $(OBJ))|$(OBJ)|' $@
+	sed -i '' 's|#(notdir $(OBJ))|$(OBJ)|' $@
 
 %.o: %.asm Makefile
 	nasm -f elf64 -o $@ $<
