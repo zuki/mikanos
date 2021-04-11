@@ -38,7 +38,7 @@ void Window::DrawTo(FrameBuffer &dst, Vector2D<int> position)
              x < std::min(Width(), writer.Width());
              ++x) {
             const auto c = At(Vector2D<int>{x, y});
-            if (c != tc) {
+            if (c != tc && position.x + x < writer.Width()) {
                 writer.Write(position + Vector2D<int>{x, y}, c);
             }
         }
