@@ -24,11 +24,14 @@ struct TaskContext {
     std::array<uint8_t, 512> fxsave_area;   // offset 0xc0
 } __attribute__((packed));
 
-using TaskFunc = void (uint64_t, uint64_t);
+using TaskFunc = void (uint64_t, int64_t);
+
+class TaskManager;
 
 class Task {
 public:
-    static const size_t kDefaultStackbytes = 4096;
+    static const int kDefaultLevel = 1;
+    static const size_t kDefaultStackBytes = 4096;
 
     Task(uint64_t id);
     Task &InitContext(TaskFunc *f, int64_t data);
@@ -39,30 +42,47 @@ public:
     void SendMessage(const Message &msg);
     std::optional<Message> ReceiveMessage();
 
+    int Level() const { return level_; }
+    bool Running() const { return running_; }
+
 private:
     uint64_t id_;
     std::vector<uint64_t> stack_;
     alignas(16) TaskContext context_;
     std::deque<Message> msgs_;
+    unsigned int level_{kDefaultLevel};
+    bool running_{false};
+
+    Task &SetLevel(int level) { level_ = level; return *this; }
+    Task &SetRunning(bool running) { running_ = running; return *this; }
+
+    friend TaskManager;
 };
 
 class TaskManager {
 public:
+    // level: 0 = lowest, kmaxLevel = highest
+    static const int kMaxLevel = 3;
+
     TaskManager();
     Task &NewTask();
     void SwitchTask(bool current_sleep = false);
 
     void Sleep(Task *task);
     Error Sleep(uint64_t id);
-    void Wakeup(Task *task);
-    Error Wakeup(uint64_t id);
+    void Wakeup(Task *task, int level = -1);
+    Error Wakeup(uint64_t id, int level = -1);
     Error SendMessage(uint64_t id, const Message &msg);
     Task &CurrentTask();
 
 private:
     std::vector<std::unique_ptr<Task>> tasks_{};
     uint64_t latest_id_{0};
-    std::deque<Task *> running_{};
+    std::array<std::deque<Task *>, kMaxLevel + 1> running_{};
+    int current_level_{kMaxLevel};
+    bool level_changed_{false};
+
+    void ChangeLevelRunning(Task *task, int level);
 };
 
 extern TaskManager *task_manager;
