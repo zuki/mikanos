@@ -197,10 +197,6 @@ extern "C" void KernelMainNewStack(
     InitializeTextWindow();
     InitializeTaskBWindow();
     layer_manager->Draw({{0, 0}, ScreenSize()});
-    // ここでアクティベートしたレイヤーは表示されなくなるので指定しない。
-    // 初期アクティブレイヤーは0
-    //active_layer->Activate(task_b_window_layer_id);
-    //active_layer->Activate(main_window_layer_id);
 
     acpi::Initialize(acpi_table);
     InitializeLAPICTimer();
@@ -221,9 +217,7 @@ extern "C" void KernelMainNewStack(
     usb::xhci::Initialize();
     InitializeKeyboard();
     InitializeMouse();
-
-    printk("layer_id: main=%d, text=%d, taskb=%d\n",
-        main_window_layer_id, text_window_layer_id, task_b_window_layer_id);
+    active_layer->Activate(task_b_window_layer_id);
 
     char str[128];
 
