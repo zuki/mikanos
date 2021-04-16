@@ -78,11 +78,12 @@ std::optional<Message> Task::ReceiveMessage()
 
 TaskManager::TaskManager()
 {
+    // main_task: id = 1
     Task &task = NewTask()
         .SetLevel(current_level_)
         .SetRunning(true);
     running_[current_level_].push_back(&task);
-
+    // idle task: id = 2
     Task &idle = NewTask()
         .InitContext(TaskIdle, 0)
         .SetLevel(0)

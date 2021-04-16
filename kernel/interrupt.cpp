@@ -43,7 +43,6 @@ namespace {
     void IntHandlerLAPICTimer(InterruptFrame *frame)
     {
         LAPICTimerOnInterrupt();
-        NotifyEndOfInterrupt();
     }
 }
 
