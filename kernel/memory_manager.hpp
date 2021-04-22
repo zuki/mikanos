@@ -47,12 +47,12 @@ static const FrameID kNullFrame{std::numeric_limits<size_t>::max()};
  * 配列alloc_mapの各ビットがフレームに対応し、0なら空き、1なら使用中。
  * alloc_map[n]のmビットめが対応する物理アドレスは次の式でも止まる。
  *
- *   kBytesPerFrame * (n * kBitsPerMapLine + m)
+ *   kFrameBytes * (n * kBitsPerMapLine + m)
  */
 
 class BitmapMemoryManager {
 public:
-    /** @brief このメモリ管理クラスで扱える最大メモリ量（バイト） */
+    /** @brief このメモリ管理クラスで扱える最大の物理メモリ量（バイト） */
     static const auto kMaxPhysicalMemoryBytes{128_GiB};
 
     /** @brief kMaxPhysicalMemoryBytesまでの物理メモリを扱うために必要なフレーム数 */
@@ -67,13 +67,13 @@ public:
     /** @brief インスタンスを初期化する */
     BitmapMemoryManager();
 
-    /** @brief 要求されたフレーム数の領域を確保して戦闘のフレームIDを返す */
+    /** @brief 要求されたフレーム数の領域を確保して先頭のフレームIDを返す */
     WithError<FrameID> Allocate(size_t num_frames);
     Error Free(FrameID start_frame, size_t num_frames);
     void MarkAllocated(FrameID start_frame, size_t num_frames);
 
     /** @brief このメモリマネージャで扱うメモリ範囲を設定する
-     * この呼び出し以降、Allocateによるメモリ割り当ては設定された範囲内でのい行われる.
+     * この呼び出し以降、Allocateによるメモリ割り当ては設定された範囲内でのみ行われる.
      *
      * @param range_begin メモリ範囲の始点
      * @param range_end   メモリ範囲の終点（最終フレームの次のフレーム）
@@ -91,4 +91,5 @@ private:
     void SetBit(FrameID frame, bool allocated);
 };
 
+extern BitmapMemoryManager *memory_manager;
 void InitializeMemoryManager(const MemoryMap &memory_map);

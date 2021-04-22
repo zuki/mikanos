@@ -15,7 +15,7 @@ WithError<FrameID> BitmapMemoryManager::Allocate(size_t num_frames)
                 return {kNullFrame, MAKE_ERROR(Error::kNoEnoughMemory)};
             }
             if (GetBit(FrameID{start_frame_id + i})) {
-                // "start_rame_id + i"にあるフレームは割り当て済み
+                // "start_frame_id + i"にあるフレームは割り当て済み
                 break;
             }
         }
@@ -34,7 +34,7 @@ WithError<FrameID> BitmapMemoryManager::Allocate(size_t num_frames)
 
 Error BitmapMemoryManager::Free(FrameID start_frame, size_t num_frames)
 {
-    for (size_t i = 0; i < kNullFrame.ID(); ++i) {
+    for (size_t i = 0; i < num_frames; ++i) {
         SetBit(FrameID{start_frame.ID() + i}, false);
     }
     return MAKE_ERROR(Error::kSuccess);
@@ -77,7 +77,6 @@ extern "C" caddr_t program_break, program_break_end;
 
 namespace {
     char memory_manager_buf[sizeof(BitmapMemoryManager)];
-    BitmapMemoryManager *memory_manager;
 
     Error InitializeHeap(BitmapMemoryManager &memory_manager)
     {
@@ -92,6 +91,8 @@ namespace {
         return MAKE_ERROR(Error::kSuccess);
     }
 }
+
+BitmapMemoryManager *memory_manager;
 
 void InitializeMemoryManager(const MemoryMap &memory_map)
 {

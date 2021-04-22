@@ -7,6 +7,7 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
 
 namespace fat {
 
@@ -75,17 +76,17 @@ namespace fat {
     extern unsigned long bytes_per_cluster;
     void Initialize(void *volume_image);
 
-    /** @brief 指定されたクラスタの先頭セクタがおいたあるメモリアドレスを返す。
+    /** @brief 指定されたクラスタの先頭セクタが置いてあるメモリアドレスを返す。
      *
      * @param   cluster   クラスタ番号（2始まり）
-     * @return  クラスタの先頭セクタがおいてあるメモリ領域のアドレス
+     * @return  クラスタの先頭セクタが置いてあるメモリ領域のアドレス
      */
     uintptr_t GetClusterAddr(unsigned long cluster);
 
-    /** @brief 指定されたクラスタの先頭セクタがおいてあるメモリ領域を返す。
+    /** @brief 指定されたクラスタの先頭セクタが置いてあるメモリ領域を返す。
      *
      * @param   cluster   クラスタ番号（2始まり）
-     * @return  クラスタの先頭セクタがおいてあるメモリ領域へのポインタ
+     * @return  クラスタの先頭セクタが置いてあるメモリ領域へのポインタ
      */
     template <class T>
     T *GetSectorByCluster(unsigned long cluster)
@@ -93,11 +94,11 @@ namespace fat {
         return reinterpret_cast<T *>(GetClusterAddr(cluster));
     }
 
-    /** @brief ディレクトリエントリの短命を基本名と拡張子名に分離して取得する。
+    /** @brief ディレクトリエントリの短名を基本名と拡張子名に分解して取得する。
      * パディングされた空白文字（0x20）は取り除かれ、ヌル終端される。
      *
      * @param   entry   ファイル名を得る対象のディレクトリエントリ
-     * @param   base    拡張子を覗いたファイル名（9バイト以上の配列）
+     * @param   base    拡張子を除いたファイル名（9バイト以上の配列）
      * @param   ext     拡張子（4バイト以上の配列）
      */
     void ReadName(const DirectoryEntry &entry, char *base, char *ext);
@@ -114,10 +115,19 @@ namespace fat {
     /** @brief 指定されたディレクトリからファイルを探す。
      *
      * @param name 8+3形式のファイル名（大文字小文字は区別しない）
-     * @prama directory_cluster ディレクトリの開始クラスタ（省略するとルートディレクトリから検索する）
+     * @param directory_cluster ディレクトリの開始クラスタ（省略するとルートディレクトリから検索する）
      * @return ファイルを表すエントリ。見つからなければ nullptr。
      */
     DirectoryEntry *FindFile(const char *name, unsigned long directory_cluster = 0);
 
     bool NameIsEqual(const DirectoryEntry &entry, const char *name);
+
+    /** @brief 指定されたファイルの内容をバッファへコピーする。
+     *
+     * @param buf   ファイル内容の格納先
+     * @param len   バッファの大きさ（バイト単位）
+     * @param entry ファイルを表すディレクトリエントリ
+     * @return  読み込んだバイト数
+     */
+    size_t LoadFile(void *buf, size_t len, const DirectoryEntry &entry);
 }   // namespace fat
