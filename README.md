@@ -1,5 +1,5 @@
 # mikanos
-MikanOS: An Educational Operating System running on legacy free architcture.
+MikanOS: An Educational Operating System running on legacy free architecture.
 
 # Files
 

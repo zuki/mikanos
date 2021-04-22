@@ -29,7 +29,7 @@ EFI_STATUS GetMemoryMap(struct MemoryMap *map) {
 
 const CHAR16 *GetMemoryTypeUnicode(EFI_MEMORY_TYPE type) {
     switch (type) {
-        case EfiReservedMemoryType: return L"EfiReservedmemoryType";
+        case EfiReservedMemoryType: return L"EfiReservedMemoryType";
         case EfiLoaderCode: return L"EfiLoaderCode";
         case EfiLoaderData: return L"EfiLoaderData";
         case EfiBootServicesCode: return L"EfiBootServicesCode";
@@ -45,7 +45,7 @@ const CHAR16 *GetMemoryTypeUnicode(EFI_MEMORY_TYPE type) {
         case EfiPalCode: return L"EfiPalCode";
         case EfiPersistentMemory: return L"EfiPersistentMemory";
         case EfiMaxMemoryType: return L"EfiMaxMemoryType";
-        default: return L"InvallidMemoryType";
+        default: return L"InvalidMemoryType";
     }
 }
 
@@ -367,12 +367,12 @@ EFI_STATUS EFIAPI UefiMain(
 
     EFI_FILE_PROTOCOL *volume_file;
     status = root_dir->Open(
-        root_dir, &volume_file, L"\\fat_dist",
+        root_dir, &volume_file, L"\\fat_disk",
         EFI_FILE_MODE_READ, 0);
     if (status == EFI_SUCCESS) {
         status = ReadFile(volume_file, &volume_image);
         if (EFI_ERROR(status)) {
-            Print(L"failed to open Block I/O Protocol: %r\n", status);
+            Print(L"failed to read volume file: %r\n", status);
             Halt();
         }
     } else {
@@ -389,7 +389,7 @@ EFI_STATUS EFIAPI UefiMain(
             volume_bytes = 16 * 1024 * 1024;
         }
 
-        Print(L"Reading %lu bytes (Present %d, BlockSize %u, LastBlock %u\n",
+        Print(L"Reading %lu bytes (Present %d, BlockSize %u, LastBlock %u)\n",
             volume_bytes, media->MediaPresent, media->BlockSize, media->LastBlock);
 
         status = ReadBlocks(block_io, media->MediaId, volume_bytes, &volume_image);
