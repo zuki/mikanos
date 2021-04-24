@@ -593,7 +593,7 @@ namespace usb::xhci {
             SwitchEhci2Xhci(*xhc_dev);
         }
         if (auto err = xhc.Initialize()) {
-            Log(kDebug, "xhc.Initialize failed: %s\n", err.Name());
+            Log(kDebug, "xhc initialize failed: %s\n", err.Name());
             exit(1);
         }
 

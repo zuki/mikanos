@@ -109,8 +109,8 @@ void FrameBuffer::Move(Vector2D<int> dst_pos, const Rectangle<int> &src)
         const uint8_t *src_buf = FrameAddrAt(src.pos + Vector2D<int>{0, src.size.y - 1}, config_);
         for (int y = 0; y < src.size.y; ++y) {
             memcpy(dst_buf, src_buf, bytes_per_pixel * src.size.x);
-            dst_buf += bytes_per_scan_line;
-            src_buf += bytes_per_scan_line;
+            dst_buf -= bytes_per_scan_line;
+            src_buf -= bytes_per_scan_line;
         }
     }
 }

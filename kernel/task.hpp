@@ -61,7 +61,7 @@ private:
 
 class TaskManager {
 public:
-    // level: 0 = lowest, kmaxLevel = highest
+    // level: 0 = lowest, kMaxLevel = highest
     static const int kMaxLevel = 3;
 
     TaskManager();

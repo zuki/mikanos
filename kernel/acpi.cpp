@@ -48,8 +48,8 @@ namespace acpi {
 
     bool DescriptionHeader::IsValid(const char *expected_signature) const
     {
-        if (strncmp(this->signaure, expected_signature, 4) != 0) {
-            Log(kDebug, "invalid signature: %.4s\n", this->signaure);
+        if (strncmp(this->signature, expected_signature, 4) != 0) {
+            Log(kDebug, "invalid signature: %.4s\n", this->signature);
             return false;
         }
         if (auto sum = SumBytes(this, this->length); sum != 0) {

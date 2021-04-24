@@ -448,11 +448,11 @@ EFI_STATUS EFIAPI UefiMain(
         const struct FrameBufferConfig *,
         const struct MemoryMap *,
         const VOID *,
-        VOID **);
+        VOID *);
     EntryPointType *entry_point = (EntryPointType *)entry_addr;
     entry_point(&config, &memmap, acpi_table, volume_image);
 
-    Print(L"All Done\n");
+    Print(L"All done\n");
 
     while (1);
     return EFI_SUCCESS;

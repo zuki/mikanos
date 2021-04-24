@@ -34,8 +34,9 @@ namespace usb {
         const int kGetEncryption     = 14;
         const int kSetHandshake      = 15;
         const int kGetHandshake      = 16;
-        const int kSetSecurityData   = 17;
-        const int kGetSecuirtyData   = 18;
+        const int kConnection        = 17;
+        const int kSetSecurityData   = 18;
+        const int kGetSecuirtyData   = 19;
         const int kSetWUSBData       = 20;
         const int kLoopbackDataWrite = 21;
         const int kLoopbackDataRead  = 22;

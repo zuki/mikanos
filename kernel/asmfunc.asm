@@ -1,6 +1,6 @@
 ; asmfunc.asm
 ;
-; System V AMD64 Calling COnvention
+; System V AMD64 Calling Convention
 ; Registers: RDI, RSI, RDX, RCX, R8, R9
 
 bits 64
@@ -135,11 +135,11 @@ SwitchContext:  ; void SwitchContext(void *next_ctx, void *current_ctx);
     ; iret用のスタックフレーム
     push qword [rdi + 0x28] ; SS
     push qword [rdi + 0x70] ; RSP
-    push qword [rdi + 0x10] ; FLAGS
+    push qword [rdi + 0x10] ; RFLAGS
     push qword [rdi + 0x20] ; CS
     push qword [rdi + 0x08] ; RIP
 
-    ; コンテストの復帰
+    ; コンテキストの復帰
     fxrstor [rdi + 0xc0]
 
     mov rax, [rdi + 0x00]

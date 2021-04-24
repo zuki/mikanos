@@ -20,7 +20,7 @@ namespace usb::xhci {
             uint32_t root_hub_port_num : 8;
             uint32_t num_ports : 8;
 
-            // TT: Transaction ranslator
+            // TT: Transaction Translator
             uint32_t tt_hub_slot_id : 8;
             uint32_t tt_port_num : 8;
             uint32_t ttt : 2;
@@ -57,7 +57,7 @@ namespace usb::xhci {
             uint64_t tr_dequeue_pointer : 60;
 
             uint32_t average_trb_length : 16;
-            uint32_t max_esit_palyload_lo : 16;
+            uint32_t max_esit_payload_lo : 16;
         } __attribute__((packed)) bits;
 
         TRB *TransferRingBuffer() const {

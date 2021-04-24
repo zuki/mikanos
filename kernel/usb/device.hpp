@@ -49,7 +49,7 @@ namespace usb {
 
         std::array<uint8_t, 256> buf_{};
 
-        // folowing fields are used during initialization
+        // following fields are used during initialization
         uint8_t num_configurations_;
         uint8_t config_index_;
 
@@ -74,7 +74,7 @@ namespace usb {
 
     Error GetDescriptor(Device &dev, EndpointID ep_id,
                         uint8_t desc_type, uint8_t desc_index,
-                        void *buf, int len, bool debu = false);
+                        void *buf, int len, bool debug = false);
     Error SetConfiguration(Device &dev, EndpointID ep_id,
                            uint8_t config_value, bool debug = false);
 }

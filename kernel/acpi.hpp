@@ -16,7 +16,7 @@ namespace acpi {
         char oem_id[6];
         uint8_t revision;
         uint32_t rsdt_address;
-        uint32_t lenght;
+        uint32_t length;
         uint64_t xsdt_address;
         uint8_t extended_checksum;
         char reserved[3];
@@ -25,7 +25,7 @@ namespace acpi {
     } __attribute__((packed));
 
     struct DescriptionHeader {
-        char signaure[4];
+        char signature[4];
         uint32_t length;
         uint8_t revision;
         uint8_t checksum;
@@ -48,7 +48,7 @@ namespace acpi {
     struct FADT {
         DescriptionHeader header;
 
-        char reserved[76 - sizeof(header)];
+        char reserved1[76 - sizeof(header)];
         uint32_t pm_tmr_blk;
         char reserved2[112 - 80];
         uint32_t flags;

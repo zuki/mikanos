@@ -1,5 +1,5 @@
 /**
- * @file usb/arraymp.hpp
+ * @file usb/arraymap.hpp
  *
  * 固定長配列を用いた簡易なマップ実装。
  */

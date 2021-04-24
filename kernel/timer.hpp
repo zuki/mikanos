@@ -22,6 +22,7 @@ private:
     int value_;
 };
 
+/** @brief タイマー優先度を比較する。タイムアウトが遠いほど優先度低。 */
 inline bool operator<(const Timer &lhs, const Timer &rhs)
 {
     return lhs.Timeout() > rhs.Timeout();
