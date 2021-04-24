@@ -1,9 +1,8 @@
 CPPFLAGS += -I.
 CFLAGS   += -O2 -Wall -g --target=x86_64-elf -ffreestanding -mcmodel=large
-CXXFLAGS += -O2 -Wall -g --target=x86_64-elf -ffreestanding \
-			-fno-exceptions -fno-rtti -std=c++17 -mcmodel=large
-LDFLAGS  += --entry main -z norelro --image-base 0xffff800000000000 --static
-#LDFLAGS  += --entry main -z norelro --image-base 0x40000000 --static
+CXXFLAGS += -O2 -Wall -g --target=x86_64-elf -ffreestanding -mcmodel=large \
+			-fno-exceptions -fno-rtti -std=c++17
+LDFLAGS  += --entry main -z norelro -z separate-code --image-base 0xffff800000000000 --static
 
 .PHONY: all
 all: $(TARGET)

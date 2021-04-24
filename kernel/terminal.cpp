@@ -141,8 +141,10 @@ namespace {
 
             LinearAddress4Level dest_addr;
             dest_addr.value = phdr[i].p_vaddr;
+            // 注意: ロードセグメントがページ境界から始まることを仮定している
             const auto num_4kpages = (phdr[i].p_memsz + 4095) / 4096;
-
+            // 仮想アドレスのoffset値を考慮して必要ページを算出する（1ページ余分に使用する場合あり）
+            //const auto num_4kpages = (dest_addr.Part(0) + phdr[i].p_memsz + 4095) / 4096;
             if (auto err = SetupPageMaps(dest_addr, num_4kpages)) {
                 return err;
             }
