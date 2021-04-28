@@ -237,6 +237,7 @@ namespace syscall {
             auto msg = task.ReceiveMessage();
             if (!msg && i == 0) {
                 task.Sleep();
+                __asm__("sti");
                 continue;
             }
             __asm__("sti");
