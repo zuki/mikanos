@@ -2,6 +2,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <stdint.h>
+#include <signal.h>
 
 #include "syscall.h"
 
@@ -15,8 +16,18 @@ int fstat(int fd, struct stat *buf) {
     return -1;
 }
 
+pid_t getpid(void) {
+    errno = EBADF;
+    return -1;
+}
+
 int isatty(int fd) {
     errno = EBADF;
+    return -1;
+}
+
+int kill(pid_t pid, int sig) {
+    errno = EPERM;
     return -1;
 }
 
