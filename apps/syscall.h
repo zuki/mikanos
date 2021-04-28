@@ -33,6 +33,7 @@ struct SyscallResult SyscallWinDrawLine(
 
 struct SyscallResult SyscallCloseWindow(uint64_t lyaer_id_flags);
 struct SyscallResult SyscallReadEvent(struct AppEvent *events, size_t len);
+
 #ifdef __cplusplus
 }   // extern "C"
 #endif
