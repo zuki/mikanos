@@ -3,6 +3,7 @@
 /hankaku.bin
 .*.d
 *.swp
+*.org
 test.run
 
 /html
