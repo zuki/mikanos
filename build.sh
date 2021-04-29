@@ -1,5 +1,7 @@
 #!/bin/sh -eu
 
+export APPS_DIR=apps
+
 make ${MAKE_OPTS:-} -C kernel kernel.elf
 
 for MK in $(ls apps/*/Makefile)
