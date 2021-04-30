@@ -78,6 +78,11 @@ std::optional<Message> Task::ReceiveMessage()
     return m;
 }
 
+std::vector<std::unique_ptr<fat::FileDescriptor>> &Task::Files()
+{
+    return files_;
+}
+
 TaskManager::TaskManager()
 {
     // main_task: id = 1
