@@ -355,6 +355,10 @@ namespace syscall {
 
         if (strcmp(path, "@stdin") == 0) {
             return { 0, 0 };
+        } else if (strcmp(path, "@stdout") == 0) {
+            return { 1, 0 };
+        } else if (strcmp(path, "@stderr") == 0) {
+            return { 2, 0 };
         }
 
         auto [ file, post_slash ] = fat::FindFile(path);
