@@ -89,7 +89,7 @@ private:
     bool level_changed_{false};
 
     void ChangeLevelRunning(Task *task, int level);
-    Task *RotateCurrentQueue(bool current_sleep);
+    Task *RotateCurrentRunQueue(bool current_sleep);
 };
 
 extern TaskManager *task_manager;
