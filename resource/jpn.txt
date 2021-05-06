@@ -1,0 +1,4 @@
+ようこそ、MikanOSへ！
+MikanOSは計算機花芽の教材となることを目指して作られています。
+
+リポジトリ https://github.bcom/ucha-nos/nikanos

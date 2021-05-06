@@ -1,6 +1,7 @@
 #!/bin/sh -eu
 
 export APPS_DIR=apps
+export RESOURCE_DIR=resource
 
 make ${MAKE_OPTS:-} -C kernel kernel.elf
 
