@@ -241,6 +241,9 @@ namespace fat {
         if (dir == nullptr) {
             return { nullptr, MAKE_ERROR(Error::kNoEnoughMemory) };
         }
+        if (dir->name[0] == 0xe5) {
+            memset(dir, 0, sizeof(fat::DirectoryEntry));
+        }
         fat::SetFileName(*dir, filename);
         dir->file_size = 0;
         dir->attr = fat::Attribute::kArchive;
