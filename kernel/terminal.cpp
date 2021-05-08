@@ -797,6 +797,7 @@ void TaskTerminal(uint64_t task_id, int64_t data)
                 CloseLayer(msg->arg.window_close.layer_id);
                 __asm__("cli");
                 task_manager->Finish(terminal->LastExitCode());
+                __asm__("sti");
                 break;
             default:
                 break;
