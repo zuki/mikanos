@@ -154,6 +154,9 @@ std::tuple<bool, int> WaitEvent(int h)
         if (err) {
             fprintf(stderr, "ReadEvent failed: %s\n", strerror(err));
             return {false, 0};
+        }
+        if (events[0].type == AppEvent::kQuit) {
+            return {true, 0};
         } else if (events[0].type == AppEvent::kKeyPush &&
                    events[0].arg.keypush.press) {
             return {false, events[0].arg.keypush.keycode};
